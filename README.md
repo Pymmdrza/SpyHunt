@@ -1,6 +1,6 @@
 # SpyHunt 4.0 - Professional Cybersecurity Reconnaissance Framework
 
-[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/spyhunt/spyhunt)
+[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](https://github.com/Pymmdrza/SpyHunt)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
@@ -41,14 +41,23 @@ A comprehensive, high-performance cybersecurity reconnaissance framework built w
 
 ### Quick Install
 ```bash
+# Install the published package
+pip install spyhunt
+
+# Verify installation
+spyhunt --version
+```
+
+### Source Install
+```bash
 # Clone the repository
-git clone https://github.com/spyhunt/spyhunt.git
-cd spyhunt
+git clone https://github.com/Pymmdrza/SpyHunt.git
+cd SpyHunt
 
 # Install dependencies
-pip install -r requirements_new.txt
+pip install -r requirements.txt
 
-# Install SpyHunt
+# Install SpyHunt in editable mode
 pip install -e .
 
 # Verify installation
@@ -375,8 +384,8 @@ python -m cProfile -o profile.stats main_new.py
 
 ## 🤝 Support
 
-- **Issues**: [GitHub Issues](https://github.com/spyhunt/spyhunt/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/spyhunt/spyhunt/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Pymmdrza/SpyHunt/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Pymmdrza/SpyHunt/discussions)
 - **Security**: Email security@spyhunt.com for security issues
 - **Documentation**: [Official Docs](https://spyhunt.readthedocs.io/)
 

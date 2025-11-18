@@ -1,13 +1,17 @@
 name: Publish SpyHunt to PyPI
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 4.0.1)"
+        required: true
+        default: "4.0.1"
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
+  packages: write
 
 jobs:
   build-and-publish:
@@ -35,3 +39,15 @@ jobs:
           PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           python -m twine upload dist/* -u __token__ -p "${PYPI_API_TOKEN}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v${{ inputs.version }}"
+          name: "SpyHunt v${{ inputs.version }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
