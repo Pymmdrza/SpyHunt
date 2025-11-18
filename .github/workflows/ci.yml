@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-test-build:
+    name: Lint, Test & Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.8", "3.9", "3.10", "3.11" ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install core dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 spyhunt
+
+      - name: Type-check with mypy
+        run: |
+          pip install mypy
+          mypy spyhunt || true
+
+      - name: Run tests with pytest
+        run: |
+          pip install pytest pytest-asyncio pytest-cov
+          pytest -q --maxfail=1 --disable-warnings --cov=spyhunt --cov-report=term-missing
+
+      - name: Security scan with bandit
+        run: |
+          pip install bandit
+          bandit -r spyhunt || true
+
+      - name: Build package
+        run: |
+          pip install build
+          python -m build .
