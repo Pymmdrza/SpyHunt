@@ -6,6 +6,14 @@ Setup script for SpyHunt 4.0 - Professional Cybersecurity Reconnaissance Framewo
 from setuptools import setup, find_packages
 from pathlib import Path
 
+# Import version from package (avoid executing heavy code)
+PACKAGE_ROOT = Path(__file__).parent / "spyhunt"
+version_globals = {}
+with open(PACKAGE_ROOT / "core" / "version.py", "r", encoding="utf-8") as f:
+    exec(f.read(), version_globals)
+
+SPYHUNT_VERSION = version_globals.get("SPYHUNT_VERSION", "0.0.0")
+
 # Read README
 README_PATH = Path(__file__).parent / "README.md"
 if README_PATH.exists():
@@ -24,7 +32,7 @@ else:
 
 setup(
     name="spyhunt",
-    version="4.0.0",
+    version=SPYHUNT_VERSION,
     author="c0deninja (Enhanced)",
     author_email="",
     description="Professional Cybersecurity Reconnaissance Framework",
@@ -70,7 +78,7 @@ setup(
             "boto3>=1.26.0",
             "azure-identity>=1.12.0",
             "google-cloud-storage>=2.7.0",
-        ]
+        ],
     },
     entry_points={
         "console_scripts": [
