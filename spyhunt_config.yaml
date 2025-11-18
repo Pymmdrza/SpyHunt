@@ -1,0 +1,152 @@
+# SpyHunt 4.0 Configuration File
+# Professional Cybersecurity Reconnaissance Framework
+
+# Application settings
+app:
+  name: "SpyHunt"
+  version: "4.0.0"
+  debug: false
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_file: "spyhunt.log"
+  working_directory: "."
+  data_directory: "./data"
+  plugins_directory: "./plugins"
+
+# Network configuration
+network:
+  timeout: 10
+  max_retries: 3
+  retry_delay: 1.0
+  max_concurrent_requests: 50
+  rate_limit_requests: 100
+  rate_limit_window: 60
+  user_agent_rotation: true
+  verify_ssl: false
+  follow_redirects: true
+  max_redirects: 5
+
+# Security settings
+security:
+  api_key_file: null
+  credential_store: null
+  enable_encryption: true
+  secure_headers: true
+  validate_certificates: false
+  sandbox_mode: false
+
+# Performance optimization
+performance:
+  enable_caching: true
+  cache_ttl: 3600
+  connection_pool_size: 100
+  dns_cache_size: 1000
+  memory_limit_mb: 2048
+  cpu_cores: null  # Auto-detect
+  async_batch_size: 100
+
+# Output configuration
+output:
+  format: "json"  # json, yaml, text, csv, xml
+  pretty_print: true
+  include_metadata: true
+  save_raw_responses: false
+  compression: false
+  max_file_size_mb: 100
+
+# Module configuration
+modules:
+  enabled: []
+  disabled: []
+  auto_load: true
+
+# Proxy settings
+proxies:
+  enabled: false
+  http_proxy: null
+  https_proxy: null
+  proxy_list: null
+  proxy_rotation: false
+
+# Scanning configuration
+scanning:
+  default_threads: 25
+  max_threads: 100
+  aggressive_mode: false
+  stealth_mode: false
+  custom_wordlists: {}
+  exclude_patterns: []
+
+# API Keys (store sensitive data in environment variables)
+api_keys:
+  shodan: "${SHODAN_API_KEY}"
+  virustotal: "${VIRUSTOTAL_API_KEY}"
+  securitytrails: "${SECURITYTRAILS_API_KEY}"
+  censys: "${CENSYS_API_KEY}"
+  github: "${GITHUB_TOKEN}"
+
+# Module-specific settings
+subdomain_enumeration:
+  wordlists:
+    - "wordlists/subdomains-top1million-5000.txt"
+    - "wordlists/dns-Jhaddix.txt"
+  dns_servers:
+    - "8.8.8.8"
+    - "1.1.1.1"
+    - "208.67.222.222"
+  bruteforce_enabled: true
+  passive_sources:
+    - "crt.sh"
+    - "virustotal"
+    - "securitytrails"
+    - "censys"
+
+port_scanning:
+  default_ports: "1-1000"
+  top_ports: 1000
+  service_detection: true
+  os_detection: false
+  stealth_scan: false
+  timing_template: 3  # nmap timing (0-5)
+
+vulnerability_scanning:
+  payloads_directory: "./payloads"
+  custom_payloads: {}
+  scan_timeout: 30
+  max_payload_size: 8192
+  encode_payloads: true
+
+web_application:
+  crawl_depth: 3
+  max_pages: 1000
+  javascript_analysis: true
+  form_analysis: true
+  cookie_analysis: true
+  follow_external_links: false
+
+cloud_security:
+  aws_regions: ["us-east-1", "us-west-2", "eu-west-1"]
+  azure_subscriptions: []
+  gcp_projects: []
+  enumerate_permissions: false
+
+osint:
+  google_dork_delay: 2
+  social_media_platforms: ["twitter", "linkedin", "facebook", "instagram"]
+  data_breach_sources: ["haveibeenpwned"]
+  email_enumeration: true
+
+# Notification settings
+notifications:
+  enabled: false
+  webhook_url: null
+  slack_token: null
+  discord_webhook: null
+  email_smtp: null
+
+# Advanced settings
+advanced:
+  custom_dns_resolvers: []
+  bypass_techniques: []
+  evasion_methods: []
+  fingerprinting_enabled: true
+  passive_mode_only: false
