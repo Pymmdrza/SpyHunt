@@ -17,7 +17,12 @@ from ..core.logger import setup_logging, get_logger
 from ..core.engine import SpyHuntEngine, ScanJob
 from ..modules import register_builtin_modules
 from ..core.exceptions import SpyHuntException, ValidationError
-from ..core.version import SPYHUNT_VERSION, SPYHUNT_NAME, SPYHUNT_TAGLINE  # NEW
+from ..core.version import (
+    SPYHUNT_VERSION,
+    SPYHUNT_NAME,
+    SPYHUNT_AUTHOR,
+    SPYHUNT_TAGLINE,
+)
 
 # Initialize console with proper configuration
 console = Console(highlight=False, log_path=False)
@@ -35,7 +40,7 @@ def display_banner() -> None:
     ╚══════╝╚═╝        ╚═╝       ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   
 [/bold magenta]
 
-[cyan] {SPYHUNT_TAGLINE}[/cyan]
+[cyan]🛡️  {SPYHUNT_TAGLINE}[/cyan]
 [dim]Version {SPYHUNT_VERSION}[/dim]
 [dim]By {SPYHUNT_AUTHOR} | Built for professional security assessments[/dim]
 """
