@@ -311,16 +311,36 @@ class Config:
         path_obj = Path(file_path)
         
         try:
+            # Convert enums and other non-serializable objects to their values
+            config_to_save = self._serialize_config(self._config.copy())
+            
             with open(path_obj, 'w', encoding='utf-8') as f:
                 if path_obj.suffix.lower() in ['.yaml', '.yml']:
-                    yaml.dump(self._config, f, default_flow_style=False, indent=2)
+                    yaml.dump(config_to_save, f, default_flow_style=False, indent=2)
                 elif path_obj.suffix.lower() == '.json':
-                    json.dump(self._config, f, indent=2, ensure_ascii=False)
+                    json.dump(config_to_save, f, indent=2, ensure_ascii=False)
                 else:
                     raise ValueError(f"Unsupported file format: {path_obj.suffix}")
                     
         except Exception as e:
             raise ValueError(f"Error saving configuration: {e}")
+    
+    def _serialize_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert non-serializable objects (like enums) to serializable values."""
+        serialized = {}
+        for key, value in config.items():
+            if isinstance(value, dict):
+                serialized[key] = self._serialize_config(value)
+            elif isinstance(value, Enum):
+                serialized[key] = value.value
+            elif isinstance(value, (list, tuple)):
+                serialized[key] = [
+                    item.value if isinstance(item, Enum) else item
+                    for item in value
+                ]
+            else:
+                serialized[key] = value
+        return serialized
     
     @property
     def network(self) -> NetworkConfig:
