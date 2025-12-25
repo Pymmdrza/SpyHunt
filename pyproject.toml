@@ -1,0 +1,117 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spyhunt"
+version = "4.0.0"
+description = "A comprehensive network scanning and vulnerability assessment tool designed for security professionals"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Pymmdrza"}
+]
+keywords = [
+    "security", "vulnerability", "scanner", "penetration-testing", 
+    "reconnaissance", "bug-bounty", "web-security", "network-security",
+    "subdomain-enumeration", "vulnerability-scanner", "security-tools",
+    "pentesting", "ethical-hacking", "infosec", "cybersecurity"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+    "Topic :: System :: Networking",
+    "Topic :: Internet :: WWW/HTTP",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Environment :: Console",
+]
+dependencies = [
+    "colorama",
+    "requests",
+    "shodan",
+    "mmh3",
+    "PyExecJS",
+    "python3-nmap",
+    "beautifulsoup4",
+    "fake-useragent",
+    "googlesearch-python",
+    "alive-progress",
+    "python-whois",
+    "aiohttp",
+    "dnspython",
+    "waybackpy",
+    "ratelimit",
+    "pyjwt",
+    "boto3",
+    "ipinfo",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=3.0.0",
+    "black>=22.0.0",
+    "flake8>=4.0.0",
+    "mypy>=0.950",
+]
+
+[project.urls]
+Homepage = "https://github.com/Pymmdrza/spyhunt"
+Documentation = "https://github.com/Pymmdrza/spyhunt#readme"
+Repository = "https://github.com/Pymmdrza/spyhunt"
+"Bug Reports" = "https://github.com/Pymmdrza/spyhunt/issues"
+
+[project.scripts]
+spyhunt = "spyhunt.__main__:main"
+
+[tool.setuptools]
+packages = ["spyhunt", "spyhunt.modules", "spyhunt.tools"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+spyhunt = [
+    "payloads/*.txt",
+    "scripts/*.sh",
+    "scripts/*.py",
+    "tools/*.py",
+    "tools/assetfinder",
+    "tools/smuggler/**/*",
+    "tools/whatwaf/**/*",
+    "LICENSE",
+    "README.md",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py37", "py38", "py39", "py310", "py311"]
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=spyhunt --cov-report=term-missing"
+
+[tool.mypy]
+python_version = "3.7"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+

@@ -1,103 +1,102 @@
 #!/usr/bin/env python3
 """
-Setup script for SpyHunt 4.0 - Professional Cybersecurity Reconnaissance Framework
+SpyHunt - A comprehensive network scanning and vulnerability assessment tool
 """
 
 from setuptools import setup, find_packages
-from pathlib import Path
+import os
+import sys
 
-# Import version from package (avoid executing heavy code)
-PACKAGE_ROOT = Path(__file__).parent / "spyhunt"
-version_globals = {}
-with open(PACKAGE_ROOT / "core" / "version.py", "r", encoding="utf-8") as f:
-    exec(f.read(), version_globals)
-
-SPYHUNT_VERSION = version_globals.get("SPYHUNT_VERSION", "0.0.0")
-
-# Read README
-README_PATH = Path(__file__).parent / "README.md"
-if README_PATH.exists():
-    with open(README_PATH, "r", encoding="utf-8") as f:
-        long_description = f.read()
-else:
-    long_description = "Professional Cybersecurity Reconnaissance Framework"
+# Read the long description from README
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
 
 # Read requirements
-REQUIREMENTS_PATH = Path(__file__).parent / "requirements.txt"
-if REQUIREMENTS_PATH.exists():
-    with open(REQUIREMENTS_PATH, "r", encoding="utf-8") as f:
-        requirements = [line.strip() for line in f if line.strip() and not line.startswith("#")]
-else:
-    requirements = []
+with open("requirements.txt", "r", encoding="utf-8") as fh:
+    requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
+# Package metadata
 setup(
     name="spyhunt",
-    version=SPYHUNT_VERSION,
-    author="c0deninja (Enhanced)",
+    version="4.0.0",
+    author="Mmdrza",
     author_email="",
-    description="Professional Cybersecurity Reconnaissance Framework",
+    description="A comprehensive network scanning and vulnerability assessment tool designed for security professionals",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/spyhunt/spyhunt",
-    packages=find_packages(),
+    url="https://github.com/Pymmdrza/spyhunt",
+    project_urls={
+        "Bug Reports": "https://github.com/Pymmdrza/spyhunt/issues",
+        "Source": "https://github.com/Pymmdrza/spyhunt",
+        "Documentation": "https://github.com/Pymmdrza/spyhunt#readme",
+    },
+    packages=find_packages(exclude=["tests", "tests.*"]),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Information Technology",
+        "Intended Audience :: System Administrators",
+        "Intended Audience :: Developers",
         "Topic :: Security",
         "Topic :: System :: Networking",
         "Topic :: Internet :: WWW/HTTP",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Operating System :: OS Independent",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS",
+        "Environment :: Console",
     ],
-    python_requires=">=3.8",
+    keywords=[
+        "security", "vulnerability", "scanner", "penetration-testing", 
+        "reconnaissance", "bug-bounty", "web-security", "network-security",
+        "subdomain-enumeration", "vulnerability-scanner", "security-tools",
+        "pentesting", "ethical-hacking", "infosec", "cybersecurity",
+        "xxe", "ssrf", "ssti", "nosql-injection", "crlf", "xss", "sqli"
+    ],
+    python_requires=">=3.7",
     install_requires=requirements,
     extras_require={
         "dev": [
-            "pytest>=7.2.0",
-            "pytest-asyncio>=0.21.0",
-            "pytest-cov>=4.0.0",
-            "black>=22.10.0",
-            "flake8>=6.0.0",
-            "mypy>=0.991",
-            "pre-commit>=2.21.0",
-        ],
-        "security": [
-            "bandit>=1.7.4",
-            "safety>=2.3.0",
-        ],
-        "performance": [
-            "uvloop>=0.17.0; sys_platform != 'win32'",
-            "orjson>=3.8.0",
-        ],
-        "cloud": [
-            "boto3>=1.26.0",
-            "azure-identity>=1.12.0",
-            "google-cloud-storage>=2.7.0",
+            "pytest>=7.0.0",
+            "pytest-cov>=3.0.0",
+            "black>=22.0.0",
+            "flake8>=4.0.0",
+            "mypy>=0.950",
         ],
     },
     entry_points={
         "console_scripts": [
-            "spyhunt=spyhunt.cli.main:main",
+            "spyhunt=spyhunt.__main__:main",
         ],
     },
     include_package_data=True,
     package_data={
         "spyhunt": [
             "payloads/*.txt",
-            "config/*.yaml",
-            "data/*.json",
+            "scripts/*.sh",
+            "scripts/*.py",
+            "tools/f5bigip_scanner.py",
+            "tools/pathhunt.py",
+            "tools/assetfinder",
+            "tools/smuggler/*.py",
+            "tools/smuggler/configs/*.py",
+            "tools/smuggler/payloads/*",
+            "tools/whatwaf/**/*.py",
+            "tools/whatwaf/content/files/*.txt",
+            "tools/whatwaf/content/files/*.lst",
+            "LICENSE",
+            "README.md",
         ],
     },
     zip_safe=False,
-    keywords="cybersecurity reconnaissance penetration-testing security-tools bug-bounty osint",
-    project_urls={
-        "Bug Reports": "https://github.com/spyhunt/spyhunt/issues",
-        "Source": "https://github.com/spyhunt/spyhunt",
-        "Documentation": "https://spyhunt.readthedocs.io/",
-    },
+    platforms=["any"],
+    license="MIT",
+    maintainer="Mmdrza",
+    maintainer_email="pymmdrza@gmail.com",
 )
+
