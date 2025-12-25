@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,9 +8,12 @@ version = "4.0.0"
 description = "A comprehensive network scanning and vulnerability assessment tool designed for security professionals"
 readme = "README.md"
 requires-python = ">=3.7"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
-    {name = "Pymmdrza"}
+    {name = "Pymmdrza", email = "pymmdrza@gmail.com"}
+]
+maintainers = [
+    {name = "Mmdrza", email = "pymmdrza@gmail.com"}
 ]
 keywords = [
     "security", "vulnerability", "scanner", "penetration-testing", 
@@ -26,7 +29,6 @@ classifiers = [
     "Topic :: Security",
     "Topic :: System :: Networking",
     "Topic :: Internet :: WWW/HTTP",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
@@ -58,6 +60,9 @@ dependencies = [
     "boto3",
     "ipinfo",
     "tqdm",
+    "impacket",
+    "PySocks",
+    "urllib3",
 ]
 
 [project.optional-dependencies]
@@ -79,8 +84,12 @@ Repository = "https://github.com/Pymmdrza/spyhunt"
 spyhunt = "spyhunt.__main__:main"
 
 [tool.setuptools]
-packages = ["spyhunt", "spyhunt.modules", "spyhunt.tools"]
 include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["spyhunt*"]
+exclude = ["tests*"]
 
 [tool.setuptools.package-data]
 spyhunt = [

@@ -16,5 +16,7 @@ ratelimit
 pyjwt
 boto3
 ipinfo
-fake-useragent
 tqdm
+impacket
+PySocks
+urllib3

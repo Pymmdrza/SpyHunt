@@ -1,41 +1,39 @@
 # Include documentation
 include README.md
 include LICENSE
+include QUICKSTART.md
 
 # Include requirements
 include requirements.txt
 
-# Include payload files
-recursive-include payloads *.txt
-
-# Include scripts
-recursive-include scripts *.sh
-recursive-include scripts *.py
+# Include package data
+recursive-include spyhunt *.py
+recursive-include spyhunt/payloads *.txt
+recursive-include spyhunt/scripts *.sh
+recursive-include spyhunt/scripts *.py
+recursive-include spyhunt/modules *.py
 
 # Include tools directory
-recursive-include tools *.py
-include tools/assetfinder
+recursive-include spyhunt/tools *.py
+include spyhunt/tools/assetfinder
 
 # Include smuggler tool
-recursive-include tools/smuggler *.py
-recursive-include tools/smuggler/configs *.py
-recursive-include tools/smuggler/payloads *
-include tools/smuggler/LICENSE
-include tools/smuggler/README.md
+recursive-include spyhunt/tools/smuggler *.py
+recursive-include spyhunt/tools/smuggler/configs *.py
+recursive-include spyhunt/tools/smuggler/payloads *
+include spyhunt/tools/smuggler/LICENSE
+include spyhunt/tools/smuggler/README.md
 
 # Include whatwaf tool
-recursive-include tools/whatwaf *.py
-recursive-include tools/whatwaf/content *.txt
-recursive-include tools/whatwaf/content *.lst
-include tools/whatwaf/LICENSE.md
-include tools/whatwaf/README.md
-include tools/whatwaf/requirements.txt
-include tools/whatwaf/bootstrap.sh
-include tools/whatwaf/install_helper.sh
-include tools/whatwaf/Dockerfile
-
-# Include modules
-recursive-include modules *.py
+recursive-include spyhunt/tools/whatwaf *.py
+recursive-include spyhunt/tools/whatwaf/content *.txt
+recursive-include spyhunt/tools/whatwaf/content *.lst
+include spyhunt/tools/whatwaf/LICENSE.md
+include spyhunt/tools/whatwaf/README.md
+include spyhunt/tools/whatwaf/requirements.txt
+include spyhunt/tools/whatwaf/bootstrap.sh
+include spyhunt/tools/whatwaf/install_helper.sh
+include spyhunt/tools/whatwaf/Dockerfile
 
 # Exclude compiled Python files
 global-exclude *.pyc
