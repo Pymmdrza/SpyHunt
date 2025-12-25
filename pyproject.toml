@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
 authors = [
-    {name = "Pymmdrza", email = "pymmdrza@gmail.com"}
+    {name = "Mmdrza", email = "pymmdrza@gmail.com"}
 ]
 maintainers = [
     {name = "Mmdrza", email = "pymmdrza@gmail.com"}
@@ -75,8 +75,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Pymmdrza/spyhunt"
-Documentation = "https://github.com/Pymmdrza/spyhunt#readme"
+Homepage = "https://spyhunt.readthedocs.io/"
+Documentation = "https://spyhunt.readthedocs.io/en/latest/"
 Repository = "https://github.com/Pymmdrza/spyhunt"
 "Bug Reports" = "https://github.com/Pymmdrza/spyhunt/issues"
 
