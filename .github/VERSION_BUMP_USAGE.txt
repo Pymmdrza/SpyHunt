@@ -1,0 +1,45 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    SPYHUNT - VERSION BUMPING SYSTEM
+═══════════════════════════════════════════════════════════════════════════════
+
+USAGE:
+
+1. LOCAL (Manual):
+   python .github/bump_version.py patch    # 4.0.0 → 4.0.1
+   python .github/bump_version.py minor    # 4.0.0 → 4.1.0
+   python .github/bump_version.py major    # 4.0.0 → 5.0.0
+   
+   # Or from .github directory:
+   cd .github && python bump_version.py patch
+
+2. GITHUB ACTIONS (Automatic):
+   - Go to Actions tab
+   - Select "Manual Version Bump" workflow
+   - Click "Run workflow"
+   - Choose: patch, minor, or major
+   - Click "Run workflow" button
+
+3. AUTO-DETECTION (Commit Messages):
+   git commit -m "feat!: breaking change"     → MAJOR bump
+   git commit -m "feat: new feature"          → MINOR bump
+   git commit -m "fix: bug fix"               → PATCH bump
+   git commit -m "docs: update [skip version]" → NO bump
+
+FILES UPDATED:
+   - pyproject.toml
+   - spyhunt/__init__.py
+   - VERSION
+   - README.md (if version references exist)
+
+GITHUB SECRETS NEEDED:
+   - PYPI_API_TOKEN (for publishing to PyPI)
+   - TEST_PYPI_API_TOKEN (optional, for testing)
+
+WORKFLOWS (4 Streamlined):
+   1. manual-version-bump.yml    → Manual version bump + release → triggers PyPI
+   2. auto-version-bump.yml      → Automatic on push to main → triggers PyPI
+   3. publish-to-pypi.yml        → Publish to PyPI (triggered by releases)
+   4. ci.yml                     → Comprehensive testing & build validation
+
+═══════════════════════════════════════════════════════════════════════════════
+

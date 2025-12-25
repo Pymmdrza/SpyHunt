@@ -1,12 +1,12 @@
 from colorama import Fore, init, Style
 from os import path
-from modules.favicon import *
+from .modules.favicon import *
 from bs4 import BeautifulSoup
 from multiprocessing.pool import ThreadPool
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import urlparse, urljoin, urlencode, parse_qs, quote_plus
-from modules import useragent_list
-from modules import sub_output
+from .modules import useragent_list
+from .modules import sub_output
 from googlesearch import search
 from alive_progress import alive_bar
 from queue import Queue
@@ -14,10 +14,10 @@ from shutil import which
 from collections import defaultdict
 from threading import Semaphore
 from ratelimit import limits, sleep_and_retry
-from modules.jwt_analyzer import JWTAnalyzer
-from modules.ss3sec import S3Scanner
+from .modules.jwt_analyzer import JWTAnalyzer
+from .modules.ss3sec import S3Scanner
 from datetime import datetime
-from modules.heap_dump import HeapdumpAnalyzer
+from .modules.heap_dump import HeapdumpAnalyzer
 from impacket.smbconnection import SMBConnection, SessionError
 from fake_useragent import UserAgent
 import waybackpy
@@ -69,7 +69,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 # Import new security modules
-from modules.security_utils import (
+from .modules.security_utils import (
     validate_domain,
     validate_ip,
     validate_url,
@@ -82,7 +82,7 @@ from modules.security_utils import (
     SecretDetector,
     SecurityError
 )
-from modules.advanced_scanners import (
+from .modules.advanced_scanners import (
     XXEScanner,
     SSRFScanner,
     SSTIScanner,
@@ -108,7 +108,7 @@ banner = f"""
 ░  ░  ░  ░░       ▒ ▒ ░░   ░  ░░ ░ ░░░ ░ ░    ░   ░ ░   ░      
       ░           ░ ░      ░  ░  ░   ░              ░         
 {Fore.WHITE}V 4.0
-{Fore.WHITE}By c0deninja
+{Fore.WHITE}By Pymmdrza
 {Fore.RESET}
 """
 
