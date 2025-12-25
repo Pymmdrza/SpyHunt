@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# Optional pre-commit hook for SpyHunt
+# Verifies version consistency before commits
+#
+# To enable:
+#   cp .github/hooks/pre-commit.sample .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+
+echo "Checking version consistency..."
+
+# Extract versions
+VERSION_PYPROJECT=$(grep -Po '(?<=version = ")[^"]*' pyproject.toml 2>/dev/null)
+VERSION_INIT=$(grep -Po '(?<=__version__ = ")[^"]*' spyhunt/__init__.py 2>/dev/null)
+VERSION_FILE=$(cat VERSION 2>/dev/null)
+
+# Check if all versions match
+if [ -n "$VERSION_PYPROJECT" ] && [ -n "$VERSION_INIT" ] && [ -n "$VERSION_FILE" ]; then
+    if [ "$VERSION_PYPROJECT" != "$VERSION_INIT" ] || [ "$VERSION_PYPROJECT" != "$VERSION_FILE" ]; then
+        echo "❌ ERROR: Version mismatch detected!"
+        echo "   pyproject.toml: $VERSION_PYPROJECT"
+        echo "   __init__.py:    $VERSION_INIT"
+        echo "   VERSION:        $VERSION_FILE"
+        echo ""
+        echo "Fix with: python .github/bump_version.py patch"
+        exit 1
+    fi
+fi
+
+echo "✅ Version consistency verified: $VERSION_PYPROJECT"
+exit 0
+

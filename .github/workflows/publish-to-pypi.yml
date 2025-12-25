@@ -5,59 +5,128 @@ on:
     types: [published]
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'testpypi'
-        type: choice
-        options:
-          - testpypi
-          - pypi
+      test_pypi:
+        description: 'Publish to Test PyPI instead of production'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
   build-and-publish:
-    name: Build and Publish to PyPI
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build twine
-        
-    - name: Build package
-      run: python -m build
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       
-    - name: Check package
-      run: twine check dist/*
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
       
-    - name: Publish to TestPyPI
-      if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'testpypi'
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-      run: |
-        twine upload --repository testpypi dist/*
-        
-    - name: Publish to PyPI
-      if: github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'pypi')
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        twine upload dist/*
-        
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: distribution-packages
-        path: dist/
-
+      - name: Verify version consistency
+        id: version_check
+        run: |
+          VERSION_PYPROJECT=$(grep -Po '(?<=version = ")[^"]*' pyproject.toml)
+          VERSION_INIT=$(grep -Po '(?<=__version__ = ")[^"]*' spyhunt/__init__.py)
+          VERSION_FILE=$(cat VERSION 2>/dev/null || echo "")
+          
+          echo "Version in pyproject.toml: $VERSION_PYPROJECT"
+          echo "Version in __init__.py: $VERSION_INIT"
+          echo "Version in VERSION file: $VERSION_FILE"
+          
+          if [ "$VERSION_PYPROJECT" != "$VERSION_INIT" ]; then
+            echo "❌ Version mismatch between pyproject.toml and __init__.py!"
+            exit 1
+          fi
+          
+          if [ -n "$VERSION_FILE" ] && [ "$VERSION_PYPROJECT" != "$VERSION_FILE" ]; then
+            echo "❌ Version mismatch with VERSION file!"
+            exit 1
+          fi
+          
+          echo "version=$VERSION_PYPROJECT" >> $GITHUB_OUTPUT
+          echo "✅ Version consistency verified: $VERSION_PYPROJECT"
+      
+      - name: Build package
+        run: |
+          python -m build
+          echo "📦 Package built successfully"
+      
+      - name: Check package
+        run: |
+          twine check dist/*
+          echo "✅ Package validation passed"
+      
+      - name: List built files
+        run: |
+          echo "Built files:"
+          ls -lh dist/
+      
+      - name: Publish to Test PyPI
+        if: github.event_name == 'workflow_dispatch' && inputs.test_pypi == true
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+        run: |
+          if [ -z "$TWINE_PASSWORD" ]; then
+            echo "⚠️ TEST_PYPI_API_TOKEN not set, skipping Test PyPI upload"
+            exit 0
+          fi
+          python -m twine upload --repository testpypi dist/* --non-interactive
+          echo "✅ Published to Test PyPI"
+      
+      - name: Publish to PyPI (via twine)
+        if: github.event_name == 'workflow_dispatch' && inputs.test_pypi == false
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python -m twine upload dist/* --non-interactive
+          echo "✅ Published to PyPI"
+      
+      - name: Publish to PyPI (via gh-action on release)
+        if: github.event_name == 'release'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          verbose: true
+      
+      - name: Update release with artifacts
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Summary
+        run: |
+          VERSION="${{ steps.version_check.outputs.version }}"
+          echo "### 🎉 Package Published Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** $VERSION" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package:** spyhunt" >> $GITHUB_STEP_SUMMARY
+          echo "- **Target:** ${{ inputs.test_pypi == true && 'Test PyPI' || 'PyPI' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Install with: \`pip install spyhunt==$VERSION\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.test_pypi }}" == "true" ]; then
+            echo "🔗 Test PyPI: https://test.pypi.org/project/spyhunt/$VERSION/" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🔗 PyPI: https://pypi.org/project/spyhunt/$VERSION/" >> $GITHUB_STEP_SUMMARY
+          fi
