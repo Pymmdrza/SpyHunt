@@ -125,4 +125,6 @@ jobs:
           echo "- **Tag Created:** v${{ steps.bump.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "🎉 Release created at: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.bump.outputs.new_version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📦 PyPI publish will be triggered automatically by the release event" >> $GITHUB_STEP_SUMMARY
 

@@ -38,21 +38,36 @@ jobs:
       - name: Verify version consistency
         id: version_check
         run: |
-          VERSION_PYPROJECT=$(grep -Po '(?<=version = ")[^"]*' pyproject.toml)
-          VERSION_INIT=$(grep -Po '(?<=__version__ = ")[^"]*' spyhunt/__init__.py)
-          VERSION_FILE=$(cat VERSION 2>/dev/null || echo "")
+          # Extract versions with proper filtering to avoid matching other version numbers
+          VERSION_PYPROJECT=$(grep -E '^version = ' pyproject.toml | sed -n 's/^version = "\([^"]*\)"/\1/p')
+          VERSION_INIT=$(grep -E '^__version__ = ' spyhunt/__init__.py | head -n 1 | sed -n 's/^__version__ = "\([^"]*\)"/\1/p')
+          VERSION_FILE=$(cat VERSION 2>/dev/null | tr -d '[:space:]' || echo "")
           
           echo "Version in pyproject.toml: $VERSION_PYPROJECT"
           echo "Version in __init__.py: $VERSION_INIT"
           echo "Version in VERSION file: $VERSION_FILE"
           
+          if [ -z "$VERSION_PYPROJECT" ]; then
+            echo "❌ Could not extract version from pyproject.toml!"
+            exit 1
+          fi
+          
+          if [ -z "$VERSION_INIT" ]; then
+            echo "❌ Could not extract version from __init__.py!"
+            exit 1
+          fi
+          
           if [ "$VERSION_PYPROJECT" != "$VERSION_INIT" ]; then
             echo "❌ Version mismatch between pyproject.toml and __init__.py!"
+            echo "   pyproject.toml: $VERSION_PYPROJECT"
+            echo "   __init__.py:    $VERSION_INIT"
             exit 1
           fi
           
           if [ -n "$VERSION_FILE" ] && [ "$VERSION_PYPROJECT" != "$VERSION_FILE" ]; then
             echo "❌ Version mismatch with VERSION file!"
+            echo "   pyproject.toml: $VERSION_PYPROJECT"
+            echo "   VERSION file:   $VERSION_FILE"
             exit 1
           fi
           
