@@ -100,8 +100,22 @@
 
 Install directly from PyPI using pip:
 
+### Kali: 
+
 ```bash
-pip install spyhunt
+pip3 install spyhunt
+```
+
+Upgrade Package : 
+
+```bash
+pip install --upgrade spyhunt
+```
+
+Install with `--break-system-packages` without env in root:
+
+```
+sudo pip install spyhunt --break-system-packages
 ```
 
 After installation, you can run SpyHunt from anywhere:
@@ -397,206 +411,207 @@ SMB Automated Pentest:
   --smb-pass SMB_PASS   Password for credential testing
   --smb-domain SMB_DOMAIN
                         Domain for credential testing
+```
 
 # EXAMPLE
 
-Scan for subdomains and save the output to a file.
+### Scan for subdomains and save the output to a file.
 ```
 spyhunt -s yahoo.com --save filename.txt
 ```
-Scan for subdomains but also extract subdomains from shodan
+### Scan for subdomains but also extract subdomains from shodan
 ```
 spyhunt -s yahoo.com --shodan API_KEY --save filename.txt
 ```
-Scan a file of domains to extract subdomains
+### Scan a file of domains to extract subdomains
 ```
 spyhunt -s domains.txt --save filename.txt
 ```
-Scan for javascript files 
+### Scan for javascript files 
 ```
 spyhunt -j yahoo.com --depth 4 --save jsfiles.txt -c 20
 ```
-Scan for dns records
+### Scan for dns records
 ```
 spyhunt -d domains.txt
 ```
-Scan for FavIcon hashes 
+### Scan for FavIcon hashes 
 ```
 spyhunt -fi domain.com
 ```
-Web Crawler
+### Web Crawler
 ```
-spyhunt -wc https://www.domain.com
+spyhunt -wc [https://www.domain.com](https://www.domain.com)
 ```
-Web Crawler with depth  
+### Web Crawler with depth
 ```
-spyhunt -wc https://www.domain.com --depth 5
+spyhunt -wc [https://www.domain.com](https://www.domain.com) --depth 5
 ```
-Broken Links
+### Broken Links
 ```
-spyhunt -b https://www.domain.com
+spyhunt -b [https://www.domain.com](https://www.domain.com)
 ```
-Cors Misconfiguration Scan
+### Cors Misconfiguration Scan
 ```
 spyhunt -co domains.txt
 ```
-Host Header Injection
+### Host Header Injection
 ```
 spyhunt -hh domains.txt
 ```
-Host Header Injection With proxy
+### Host Header Injection With proxy
 ```
-spyhunt -hh domains.txt --proxy http://proxy.com:8080
+spyhunt -hh domains.txt --proxy [http://proxy.com:8080](http://proxy.com:8080)
 ```
-Directory Brute Forcing
+### Directory Brute Forcing
 ```
 spyhunt --directorybrute domain.com --wordlist list.txt --threads 50 -e php,txt,html -x 404,403
 ```
-Directory Brute Forcing with no extensions
+### Directory Brute Forcing with no extensions
 ```
 spyhunt --directorybrute domain.com --wordlist list.txt --threads 50 -x 404,403
 ```
-Scanning a subnet
+### Scanning a subnet
 ```
 spyhunt --cidr_notation IP/24 --ports 80,443 --threads 200
 ```
-Directory Traversal
+### Directory Traversal
 ```
 spyhunt -ph domain.com?id=
-```   
-sql injection
+```
+### sql injection
 ```
 spyhunt -sqli domain.com?id=1
-```   
-xss
+```
+### xss
 ```
 spyhunt -xss domain.com?id=1
 ```
-JavaScript file scanning for sensitive info
+### JavaScript file scanning for sensitive info
 ```
 spyhunt -javascript domain.com
 ```
-Javascript endpoint fuzzing
+### Javascript endpoint fuzzing
 ```
 spyhunt -javascript_endpoint domains.txt -c 20 --save filename.txt
 ```
-Modify the headers of the request
+### Modify the headers of the request
 ```
 spyhunt -ch domain.com
 ```
-Parameter bruteforcing
+### Parameter bruteforcing
 ```
 spyhunt -pf domain.com
 ```
-Open Redirect
+### Open Redirect
 ```
 spyhunt -or domain.com -v -c 50
 ```
-Haveibeenpwned
+### Haveibeenpwned
 ```
 spyhunt -hibp password
 ```
-Subdomain Takeover
+### Subdomain Takeover
 ```
-spyhunt -st domains.txt --save vuln_subs.txt -c 50 
+spyhunt -st domains.txt --save vuln_subs.txt -c 50
 ```
-Auto Recon
+### Auto Recon
 ```
 spyhunt -ar domain.com
 ```
-JSON Web Token
+### JSON Web Token
 ```
 spyhunt -jwt Token
 ```
-JSON Web Token Modification
+### JSON Web Token Modification
 ```
 spyhunt -jwt-modify Token
 ```
-AWS S3 Bucket Enumeration
+### AWS S3 Bucket Enumeration
 ```
 spyhunt --s3-scan bucket.com
 ```
-Heap Dump Analysis 
+### Heap Dump Analysis
 ```
 spyhunt --heapdump heapdump_file
 ```
-Spring Boot Actuator Scan
+### Spring Boot Actuator Scan
 ```
 spyhunt --heapdump_target domain.com
 ```
-Heap Dump Scan with file
+### Heap Dump Scan with file
 ```
 spyhunt --heapdump_file heapdump.txt
 ```
-Cloud Aws Scan
+### Cloud Aws Scan
 ```
 spyhunt --aws_scan domain.com
 ```
-Cloud Azure Scan
+### Cloud Azure Scan
 ```
 spyhunt --azure_scan domain.com
 ```
-Checks for 403 forbidden domains and saves it to a file 
+### Checks for 403 forbidden domains and saves it to a file
 ```
 spyhunt --forbidden_pages domains.txt
 ```
-Scan a list of domains to bypass 403 forbidden
+### Scan a list of domains to bypass 403 forbidden
 ```
 spyhunt --forbidden_domains domains.txt
 ```
-Scan google storage
+### Scan google storage
 ```
 spyhunt --gcp-scan domain.com
 ```
-Brute Forcing Login Forms With Proxies
+### Brute Forcing Login Forms With Proxies
 ```
-spyhunt --brute-user-pass domain.com/login --username_wordlist usernames --password_wordlist passwords --proxy-file proxies.txt --verbose
+spyhunt --brute-user-pass [domain.com/login](https://domain.com/login) --username_wordlist usernames --password_wordlist passwords --proxy-file proxies.txt --verbose
 ```
-Brute Forcing Login Forms Witout Proxies
+### Brute Forcing Login Forms Witout Proxies
 ```
-spyhunt --brute-user-pass domain.com/login --username_wordlist usernames --password_wordlist passwords --verbose
+spyhunt --brute-user-pass [domain.com/login](https://domain.com/login) --username_wordlist usernames --password_wordlist passwords --verbose
 ```
-Nuclei Scan
+### Nuclei Scan
 ```
 spyhunt --nuclei domain.com --nuclei-template nuclei-templates/cves/CVE-2024-22208.yaml
 ```
-SSRF Params
+### SSRF Params
 ```
 spyhunt --ssrfparams links.txt
 ```
-FTP Scan
+### FTP Scan
 ```
 spyhunt -fs domain.com
 ```
-FTP Scan with a port
+### FTP Scan with a port
 ```
 spyhunt -fs domain.com:2121
 ```
-FTP Scan with userlist and passlist
+### FTP Scan with userlist and passlist
 ```
 spyhunt -fs domain.com --ftp-userlist usernames.txt --ftp-passlist passwords.txt
 ```
-SMB Automated Pentest (Anonymous, Blank Creds, RID Brute)
+### SMB Automated Pentest (Anonymous, Blank Creds, RID Brute)
 ```
 spyhunt --smb_auto --smb-target 10.129.228.111
 ```
-SMB Pentest with Specific Credentials
+### SMB Pentest with Specific Credentials
 ```
 spyhunt --smb_auto --smb-target 10.129.228.111 --smb-user mhope --smb-pass ""
 ```
-SMB Pentest with Domain Credentials
+### SMB Pentest with Domain Credentials
 ```
 spyhunt --smb_auto --smb-target 10.129.228.111 --smb-user mhope --smb-pass "" --smb-domain megabank.local
 ```
-SMB Password Spraying with User and Password Lists
+### SMB Password Spraying with User and Password Lists
 ```
 spyhunt --smb_auto --smb-target 10.129.228.111 --spray-userlist users.txt --spray-passlist passwords.txt
 ```
-SMB Password Spraying with Single Password
+### SMB Password Spraying with Single Password
 ```
 spyhunt --smb_auto --smb-target 10.129.228.111 --spray-userlist users.txt --spray-password "Password1"
 ```
-SMB Full Pentest (Credentials + Password Spray)
+### SMB Full Pentest (Credentials + Password Spray)
 ```
 spyhunt --smb_auto --smb-target 10.129.228.111 --smb-user mhope --smb-pass "" --spray-userlist users.txt --spray-password "Welcome1"
 ```
@@ -604,7 +619,9 @@ spyhunt --smb_auto --smb-target 10.129.228.111 --smb-user mhope --smb-pass "" --
 ## 🆕 New Advanced Vulnerability Scanners (v4.0)
 
 ### XXE (XML External Entity) Scanner
+
 Test for XXE vulnerabilities in XML endpoints:
+
 ```bash
 # Basic XXE scan
 spyhunt --xxe https://example.com/api/xml
@@ -647,7 +664,9 @@ spyhunt --ssrf "https://example.com/fetch?url=test" --save ssrf_results.json
 - Port scanning via SSRF
 
 ### SSTI (Server-Side Template Injection) Scanner
+
 Test for template injection vulnerabilities:
+
 ```bash
 # Basic SSTI scan
 spyhunt --ssti "https://example.com/page?template=test"
@@ -668,7 +687,9 @@ spyhunt --ssti "https://example.com/view?template=test" --save ssti_results.json
 - Smarty (PHP)
 
 ### NoSQL Injection Scanner
+
 Test for NoSQL injection in MongoDB and CouchDB:
+
 ```bash
 # Basic NoSQL injection scan
 spyhunt --nosqli "https://example.com/api?id=test"
@@ -681,13 +702,16 @@ spyhunt --nosqli "https://example.com/api/users?id=test" --save nosql_results.js
 ```
 
 **What it detects:**
+
 - Authentication bypass
 - Operator injection (`$ne`, `$gt`, `$regex`, `$where`)
 - Time-based blind injection
 - JavaScript injection in MongoDB
 
 ### CRLF Injection Scanner
+
 Test for HTTP header injection vulnerabilities:
+
 ```bash
 # Basic CRLF scan
 spyhunt --crlf "https://example.com/redirect?url=test"
@@ -700,6 +724,7 @@ spyhunt --crlf "https://example.com/goto?url=test" --save crlf_results.json
 ```
 
 **What it detects:**
+
 - Set-Cookie header injection
 - Location header manipulation
 - HTTP response smuggling
@@ -708,6 +733,7 @@ spyhunt --crlf "https://example.com/goto?url=test" --save crlf_results.json
 ### Security Features
 
 #### SSL Verification Control
+
 ```bash
 # SSL verification ON by default (recommended)
 spyhunt --xxe https://example.com/api/xml
@@ -717,7 +743,9 @@ spyhunt --xxe https://self-signed.local/api/xml --insecure
 ```
 
 #### Logging
+
 All operations are automatically logged to `spyhunt.log`:
+
 ```bash
 # Enable verbose logging
 spyhunt --xxe https://example.com/api/xml --verbose
@@ -730,6 +758,7 @@ grep "XXE vulnerability" spyhunt.log
 ```
 
 ### Bug Bounty Workflow Example
+
 ```bash
 # 1. Enumerate subdomains
 spyhunt -s target.com --save subdomains.txt
@@ -753,6 +782,7 @@ spyhunt -co live_hosts.txt
 ## Documentation
 
 For detailed information:
+
 - **NEW_FEATURES_README.md** - Quick start guide for v4.0 features
 - **INTEGRATION_COMPLETE.md** - Complete integration details
 - **SECURITY_ANALYSIS_REPORT.md** - Comprehensive security analysis
@@ -761,12 +791,14 @@ For detailed information:
 ## Security Notes
 
 ### Default Security Settings (v4.0)
+
 - ✅ SSL certificate verification is **enabled by default**
 - ✅ All operations are logged to `spyhunt.log`
 - ✅ Command injection protection is active
 - ✅ Input validation prevents injection attacks
 
 ### Best Practices
+
 1. Always use SSL verification in production (`--insecure` only for testing)
 2. Review logs regularly for security events
 3. Save scan results with `--save` for documentation
@@ -787,5 +819,12 @@ For detailed information:
 - ⚡ Added HTTP session management
 - 🛡️ Added input validation framework
 
-### v3.4 and earlier
-- See git history for previous changes
+### Special Thanks :
+
+- [@gotr00t0day](https://github.com/gotr00t0day 'gotr00t0day')
+- Forked : [gotr00t0day/spyhunt](https://github.com/gotr00t0day/spyhunt 'spyhunt')
+
+### Refactored
+- [@Pymmdrza](https://github.com/Pymmdrza 'Pymmdrza')
+- [Pypi](https://pypi.org/project/spyhunt/ 'spyhunt python package')
+
