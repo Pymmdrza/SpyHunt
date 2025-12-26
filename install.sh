@@ -15,13 +15,14 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 WHITE='\033[1;37m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Version
+# Version and URLs
 SPYHUNT_VERSION="4.0.3"
-REPO_URL="https://github.com/Pymmdrza/SpyHunt"
+REPO_URL="https://github.com/Pymmdrza/SpyHunt.git"
 INSTALL_DIR="${HOME}/.local/share/spyhunt"
 BIN_DIR="${HOME}/.local/bin"
+VENV_DIR="${INSTALL_DIR}/venv"
 
 # Banner
 print_banner() {
@@ -30,7 +31,7 @@ print_banner() {
    _____ _____  __     __ _    _ _    _ _   _ _______ 
   / ____|  __ \ \ \   / /| |  | | |  | | \ | |__   __|
  | (___ | |__) | \ \_/ / | |__| | |  | |  \| |  | |   
-  \___ \|  ___/   \   /  |  __  | |  | | .  ` |  | |   
+  \___ \|  ___/   \   /  |  __  | |  | | . ` |  | |   
   ____) | |        | |   | |  | | |__| | |\  |  | |   
  |_____/|_|        |_|   |_|  |_|\____/|_| \_|  |_|   
                                                        
@@ -110,8 +111,8 @@ check_python() {
     
     if command -v python3 &> /dev/null; then
         PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
-        PYTHON_MAJOR=$(echo $PYTHON_VERSION | cut -d.  -f1)
-        PYTHON_MINOR=$(echo $PYTHON_VERSION | cut -d. -f2)
+        PYTHON_MAJOR=$(echo "$PYTHON_VERSION" | cut -d.  -f1)
+        PYTHON_MINOR=$(echo "$PYTHON_VERSION" | cut -d. -f2)
         
         if [ "$PYTHON_MAJOR" -ge 3 ] && [ "$PYTHON_MINOR" -ge 7 ]; then
             log_success "Python ${PYTHON_VERSION} found"
@@ -130,19 +131,19 @@ install_python() {
     case $OS in
         debian)
             $SUDO apt-get update
-            $SUDO apt-get install -y python3 python3-pip python3-venv
+            $SUDO apt-get install -y python3 python3-pip python3-venv python3-full
             ;;
         redhat)
-            $SUDO yum install -y python3 python3-pip
+            $SUDO yum install -y python3 python3-pip python3-virtualenv
             ;;
         fedora)
-            $SUDO dnf install -y python3 python3-pip
+            $SUDO dnf install -y python3 python3-pip python3-virtualenv
             ;;
         arch)
-            $SUDO pacman -Sy --noconfirm python python-pip
+            $SUDO pacman -Sy --noconfirm python python-pip python-virtualenv
             ;;
         alpine)
-            $SUDO apk add --no-cache python3 py3-pip
+            $SUDO apk add --no-cache python3 py3-pip py3-virtualenv
             ;;
         macos)
             if !  command -v brew &> /dev/null; then
@@ -167,7 +168,7 @@ install_dependencies() {
     case $OS in
         debian)
             $SUDO apt-get update
-            $SUDO apt-get install -y git curl wget nmap libffi-dev libssl-dev build-essential
+            $SUDO apt-get install -y git curl wget nmap libffi-dev libssl-dev build-essential python3-venv
             ;;
         redhat)
             $SUDO yum install -y git curl wget nmap libffi-devel openssl-devel gcc
@@ -210,10 +211,28 @@ clone_repository() {
         git pull origin main || git pull origin master
     else
         cd "$INSTALL_DIR"
-        git clone --depth 1 "$REPO_URL.git"
+        git clone --depth 1 "$REPO_URL"
     fi
     
     log_success "SpyHunt downloaded successfully"
+}
+
+# Create and setup virtual environment
+setup_venv() {
+    log_info "Creating virtual environment..."
+    
+    # Remove old venv if exists
+    if [ -d "$VENV_DIR" ]; then
+        rm -rf "$VENV_DIR"
+    fi
+    
+    # Create new virtual environment
+    $PYTHON_CMD -m venv "$VENV_DIR"
+    
+    # Activate venv
+    source "$VENV_DIR/bin/activate"
+    
+    log_success "Virtual environment created at $VENV_DIR"
 }
 
 # Install Python dependencies
@@ -222,47 +241,69 @@ install_python_deps() {
     
     cd "$INSTALL_DIR/SpyHunt"
     
-    # Create virtual environment (optional but recommended)
-    if [ "$USE_VENV" = true ]; then
-        log_info "Creating virtual environment..."
-        $PYTHON_CMD -m venv venv
-        source venv/bin/activate
-        PIP_CMD="venv/bin/pip"
-    else
-        PIP_CMD="$PYTHON_CMD -m pip"
-    fi
+    # Always use virtual environment (required for Python 3.12+)
+    setup_venv
     
-    # Upgrade pip
-    $PIP_CMD install --upgrade pip
+    # Upgrade pip in venv
+    "$VENV_DIR/bin/pip" install --upgrade pip setuptools wheel
     
     # Install package
-    $PIP_CMD install -e . 
+    "$VENV_DIR/bin/pip" install -e .
     
     log_success "Python dependencies installed"
 }
 
-# Install via pip (alternative method)
-install_via_pip() {
-    log_info "Installing SpyHunt via pip..."
-    $PYTHON_CMD -m pip install --upgrade pip
-    $PYTHON_CMD -m pip install spyhunt
-    log_success "SpyHunt installed via pip"
+# Install via pipx (alternative method for modern systems)
+install_via_pipx() {
+    log_info "Installing SpyHunt via pipx..."
+    
+    # Install pipx if not available
+    if ! command -v pipx &> /dev/null; then
+        log_info "Installing pipx..."
+        case $OS in
+            debian)
+                $SUDO apt-get update
+                $SUDO apt-get install -y pipx
+                pipx ensurepath
+                ;;
+            macos)
+                brew install pipx
+                pipx ensurepath
+                ;;
+            *)
+                $PYTHON_CMD -m pip install --user pipx
+                $PYTHON_CMD -m pipx ensurepath
+                ;;
+        esac
+    fi
+    
+    # Install spyhunt via pipx
+    pipx install spyhunt || pipx upgrade spyhunt
+    
+    log_success "SpyHunt installed via pipx"
 }
 
 # Create wrapper script
 create_wrapper() {
     log_info "Creating executable wrapper..."
     
-    cat > "$BIN_DIR/spyhunt" << 'WRAPPER'
+    cat > "$BIN_DIR/spyhunt" << EOF
 #!/bin/bash
-INSTALL_DIR="${HOME}/.local/share/spyhunt/SpyHunt"
+# SpyHunt wrapper script
+# Automatically activates virtual environment and runs spyhunt
 
-if [ -d "$INSTALL_DIR/venv" ]; then
-    source "$INSTALL_DIR/venv/bin/activate"
+VENV_DIR="$VENV_DIR"
+INSTALL_DIR="$INSTALL_DIR/SpyHunt"
+
+if [ -f "\$VENV_DIR/bin/activate" ]; then
+    source "\$VENV_DIR/bin/activate"
+    python -m spyhunt "\$@"
+else
+    echo "Error: Virtual environment not found at \$VENV_DIR"
+    echo "Please reinstall SpyHunt:  curl -sSL https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.sh | bash"
+    exit 1
 fi
-
-python3 -m spyhunt "$@"
-WRAPPER
+EOF
 
     chmod +x "$BIN_DIR/spyhunt"
     log_success "Wrapper script created at $BIN_DIR/spyhunt"
@@ -272,7 +313,6 @@ WRAPPER
 configure_path() {
     log_info "Configuring PATH..."
     
-    # Detect shell
     SHELL_NAME=$(basename "$SHELL")
     
     case $SHELL_NAME in
@@ -290,11 +330,14 @@ configure_path() {
             ;;
     esac
     
-    # Add to PATH if not already present
-    if ! grep -q "$BIN_DIR" "$SHELL_RC" 2>/dev/null; then
+    if !  grep -q "$BIN_DIR" "$SHELL_RC" 2>/dev/null; then
         echo "" >> "$SHELL_RC"
         echo "# SpyHunt" >> "$SHELL_RC"
-        echo "export PATH=\"\$PATH:$BIN_DIR\"" >> "$SHELL_RC"
+        if [ "$SHELL_NAME" = "fish" ]; then
+            echo "set -gx PATH \$PATH $BIN_DIR" >> "$SHELL_RC"
+        else
+            echo "export PATH=\"\$PATH: $BIN_DIR\"" >> "$SHELL_RC"
+        fi
         log_success "Added $BIN_DIR to PATH in $SHELL_RC"
     else
         log_info "PATH already configured"
@@ -307,12 +350,23 @@ verify_installation() {
     
     export PATH="$PATH:$BIN_DIR"
     
-    if command -v spyhunt &> /dev/null || [ -f "$BIN_DIR/spyhunt" ]; then
-        log_success "SpyHunt installed successfully!"
+    if [ -f "$BIN_DIR/spyhunt" ]; then
+        # Test if spyhunt works
+        if "$BIN_DIR/spyhunt" --help &> /dev/null; then
+            log_success "SpyHunt installed and working!"
+        else
+            log_success "SpyHunt installed successfully!"
+        fi
+        
         echo ""
         echo -e "${GREEN}╔════════════════════════════════════════════════════════════════╗${NC}"
         echo -e "${GREEN}║              Installation Complete!                             ║${NC}"
         echo -e "${GREEN}╚════════════════════════════════════════════════════════════════╝${NC}"
+        echo ""
+        echo -e "${WHITE}Installation Details:${NC}"
+        echo -e "  ${CYAN}Install Directory: ${NC}  $INSTALL_DIR/SpyHunt"
+        echo -e "  ${CYAN}Virtual Environment:${NC} $VENV_DIR"
+        echo -e "  ${CYAN}Executable:${NC}         $BIN_DIR/spyhunt"
         echo ""
         echo -e "${WHITE}Usage:${NC}"
         echo -e "  ${CYAN}spyhunt --help${NC}              Show help message"
@@ -331,13 +385,21 @@ uninstall() {
     log_info "Uninstalling SpyHunt..."
     
     # Remove installation directory
-    rm -rf "$INSTALL_DIR/SpyHunt"
+    if [ -d "$INSTALL_DIR" ]; then
+        rm -rf "$INSTALL_DIR"
+        log_success "Removed $INSTALL_DIR"
+    fi
     
     # Remove wrapper
-    rm -f "$BIN_DIR/spyhunt"
+    if [ -f "$BIN_DIR/spyhunt" ]; then
+        rm -f "$BIN_DIR/spyhunt"
+        log_success "Removed $BIN_DIR/spyhunt"
+    fi
     
-    # Remove pip package
-    $PYTHON_CMD -m pip uninstall spyhunt -y 2>/dev/null || true
+    # Try to uninstall via pipx
+    if command -v pipx &> /dev/null; then
+        pipx uninstall spyhunt 2>/dev/null || true
+    fi
     
     log_success "SpyHunt uninstalled successfully"
 }
@@ -348,15 +410,14 @@ show_help() {
     echo "Usage: ./install.sh [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  --pip          Install via pip (simpler method)"
-    echo "  --venv         Use virtual environment"
+    echo "  --pipx         Install via pipx (recommended for system-wide use)"
     echo "  --uninstall    Remove SpyHunt"
     echo "  --help         Show this help message"
     echo ""
     echo "Examples:"
     echo "  curl -sSL https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.sh | bash"
-    echo "  ./install.sh --pip"
-    echo "  ./install.sh --venv"
+    echo "  ./install.sh --pipx"
+    echo "  ./install.sh --uninstall"
     echo ""
 }
 
@@ -364,9 +425,7 @@ show_help() {
 main() {
     print_banner
     
-    # Parse arguments
-    USE_VENV=false
-    USE_PIP=false
+    USE_PIPX=false
     
     for arg in "$@"; do
         case $arg in
@@ -374,16 +433,11 @@ main() {
                 show_help
                 exit 0
                 ;;
-            --pip)
-                USE_PIP=true
-                ;;
-            --venv)
-                USE_VENV=true
+            --pipx)
+                USE_PIPX=true
                 ;;
             --uninstall)
                 detect_os
-                check_root
-                check_python
                 uninstall
                 exit 0
                 ;;
@@ -398,18 +452,16 @@ main() {
     check_python
     install_dependencies
     
-    if [ "$USE_PIP" = true ]; then
-        install_via_pip
+    if [ "$USE_PIPX" = true ]; then
+        install_via_pipx
     else
         create_directories
         clone_repository
         install_python_deps
         create_wrapper
         configure_path
+        verify_installation
     fi
-    
-    verify_installation
 }
 
-# Run main
 main "$@"
