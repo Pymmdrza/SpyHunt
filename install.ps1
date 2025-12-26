@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 
 # Colors
 function Write-ColorOutput($ForegroundColor) {
-    $fc = $host.UI.RawUI. ForegroundColor
+    $fc = $host.UI.RawUI.ForegroundColor
     $host.UI.RawUI.ForegroundColor = $ForegroundColor
     if ($args) {
         Write-Output $args
@@ -66,7 +66,7 @@ function Test-Python {
     
     try {
         $pythonVersion = python --version 2>&1
-        if ($pythonVersion -match "Python 3\. ([7-9]|1[0-9])") {
+        if ($pythonVersion -match "Python 3\.([7-9]|1[0-9])") {
             Write-Success "Python found:  $pythonVersion"
             return $true
         }
@@ -89,7 +89,7 @@ function Install-Python {
     
     # Check for winget
     if (Get-Command winget -ErrorAction SilentlyContinue) {
-        winget install Python. Python.3.11 --silent
+        winget install Python.Python.3.11 --silent
     }
     # Check for chocolatey
     elseif (Get-Command choco -ErrorAction SilentlyContinue) {
@@ -123,7 +123,7 @@ function Install-SpyHunt {
 function Install-FromSource {
     Write-Info "Installing SpyHunt from source..."
     
-    $installDir = "$env: USERPROFILE\. spyhunt"
+    $installDir = "$env: USERPROFILE\.spyhunt"
     
     # Create directory
     if (-not (Test-Path $installDir)) {
@@ -153,7 +153,7 @@ function Uninstall-SpyHunt {
     
     python -m pip uninstall spyhunt -y
     
-    $installDir = "$env: USERPROFILE\. spyhunt"
+    $installDir = "$env: USERPROFILE\.spyhunt"
     if (Test-Path $installDir) {
         Remove-Item -Recurse -Force $installDir
     }
@@ -173,7 +173,7 @@ Options:
   -Help         Show this help message
 
 Examples:
-  irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install. ps1 | iex
+  irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.ps1 | iex
   .\install.ps1 -Pip
   .\install.ps1 -Uninstall
 
@@ -214,7 +214,7 @@ function Main {
     Write-Host ""
     Write-Host "Usage:" -ForegroundColor White
     Write-Host "  spyhunt --help              Show help message" -ForegroundColor Cyan
-    Write-Host "  spyhunt -u example. com      Scan a target" -ForegroundColor Cyan
+    Write-Host "  spyhunt -u example.com      Scan a target" -ForegroundColor Cyan
     Write-Host ""
 }
 
