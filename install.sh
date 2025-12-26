@@ -147,7 +147,7 @@ install_python() {
         macos)
             if !  command -v brew &> /dev/null; then
                 log_info "Installing Homebrew..."
-                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install. sh)"
+                /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             fi
             brew install python3
             ;;
@@ -210,7 +210,7 @@ clone_repository() {
         git pull origin main || git pull origin master
     else
         cd "$INSTALL_DIR"
-        git clone --depth 1 "$REPO_URL. git"
+        git clone --depth 1 "$REPO_URL.git"
     fi
     
     log_success "SpyHunt downloaded successfully"
@@ -354,7 +354,7 @@ show_help() {
     echo "  --help         Show this help message"
     echo ""
     echo "Examples:"
-    echo "  curl -sSL https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install. sh | bash"
+    echo "  curl -sSL https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.sh | bash"
     echo "  ./install.sh --pip"
     echo "  ./install.sh --venv"
     echo ""
