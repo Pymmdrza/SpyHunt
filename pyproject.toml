@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spyhunt"
-version = "4.0.3"
+version = "4.0.4"
 description = "A comprehensive network scanning and vulnerability assessment tool designed for security professionals"
 readme = "README.md"
 requires-python = ">=3.7"
