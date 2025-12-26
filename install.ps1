@@ -19,7 +19,7 @@ function Write-ColorOutput($ForegroundColor) {
     if ($args) {
         Write-Output $args
     }
-    $host.UI.RawUI.ForegroundColor = $fc
+    $host.UI.RawUI. ForegroundColor = $fc
 }
 
 function Write-Info($message) {
@@ -54,7 +54,7 @@ function Show-Banner {
  |_____/|_|        |_|   |_|  |_|\____/|_| \_|  |_|   
                                                        
         Network Scanner & Vulnerability Assessment Tool
-                    Version: 4.0.3
+                    Version:  4.0.3
             https://github.com/Pymmdrza/SpyHunt
 
 "@ -ForegroundColor Cyan
@@ -66,19 +66,23 @@ function Test-Python {
     
     try {
         $pythonVersion = python --version 2>&1
-        if ($pythonVersion -match "Python 3\.([7-9]|1[0-9])") {
-            Write-Success "Python found:  $pythonVersion"
+        if ($pythonVersion -match "Python 3\. ([7-9]|1[0-9])") {
+            Write-Success "Python found: $pythonVersion"
             return $true
         }
-    } catch {}
+    } catch {
+        Write-Warning "Python command not found"
+    }
     
     try {
         $python3Version = python3 --version 2>&1
-        if ($python3Version -match "Python 3\.([7-9]|1[0-9])") {
+        if ($python3Version -match "Python 3\. ([7-9]|1[0-9])") {
             Write-Success "Python3 found: $python3Version"
             return $true
         }
-    } catch {}
+    } catch {
+        Write-Warning "Python3 command not found"
+    }
     
     return $false
 }
@@ -89,73 +93,122 @@ function Install-Python {
     
     # Check for winget
     if (Get-Command winget -ErrorAction SilentlyContinue) {
-        winget install Python.Python.3.11 --silent
+        try {
+            winget install Python. Python.3.11 --silent --accept-source-agreements --accept-package-agreements
+            Write-Success "Python installed via winget"
+        } catch {
+            Write-Error "Failed to install Python via winget:  $_"
+            exit 1
+        }
     }
     # Check for chocolatey
     elseif (Get-Command choco -ErrorAction SilentlyContinue) {
-        choco install python3 -y
+        try {
+            choco install python3 -y
+            Write-Success "Python installed via chocolatey"
+        } catch {
+            Write-Error "Failed to install Python via chocolatey: $_"
+            exit 1
+        }
     }
     else {
-        Write-Error "Please install Python 3.7+ manually from https://python.org"
+        Write-Error "No package manager found.  Please install Python 3.7+ manually from https://python.org"
+        Write-Info "Or install winget/chocolatey first"
         exit 1
     }
     
     # Refresh PATH
     $env:Path = [System.Environment]:: GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
     
-    Write-Success "Python installed successfully"
+    # Wait for PATH to update
+    Start-Sleep -Seconds 2
+    
+    # Verify installation
+    if (-not (Test-Python)) {
+        Write-Warning "Python installed but not found in PATH.  Please restart PowerShell and run the installer again."
+        exit 1
+    }
 }
 
 # Install SpyHunt
 function Install-SpyHunt {
     Write-Info "Installing SpyHunt..."
     
-    # Upgrade pip
-    python -m pip install --upgrade pip
-    
-    # Install SpyHunt
-    python -m pip install spyhunt
-    
-    Write-Success "SpyHunt installed successfully"
+    try {
+        # Upgrade pip
+        Write-Info "Upgrading pip..."
+        python -m pip install --upgrade pip --quiet
+        
+        # Install SpyHunt
+        Write-Info "Installing SpyHunt package..."
+        python -m pip install spyhunt --upgrade
+        
+        Write-Success "SpyHunt installed successfully"
+    } catch {
+        Write-Error "Failed to install SpyHunt: $_"
+        Write-Info "Trying alternative installation method..."
+        Install-FromSource
+    }
 }
 
 # Install from source
 function Install-FromSource {
     Write-Info "Installing SpyHunt from source..."
     
+    # Check for git
+    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+        Write-Error "Git is not installed. Please install Git first or use:  .\install.ps1 -Pip"
+        exit 1
+    }
+    
     $installDir = "$env: USERPROFILE\.spyhunt"
     
-    # Create directory
-    if (-not (Test-Path $installDir)) {
-        New-Item -ItemType Directory -Path $installDir -Force | Out-Null
-    }
-    
-    # Clone repository
-    if (Test-Path "$installDir\SpyHunt") {
-        Write-Info "Updating existing installation..."
+    try {
+        # Create directory
+        if (-not (Test-Path $installDir)) {
+            New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+        }
+        
+        # Clone or update repository
+        if (Test-Path "$installDir\SpyHunt") {
+            Write-Info "Updating existing installation..."
+            Set-Location "$installDir\SpyHunt"
+            git pull origin main
+        } else {
+            Write-Info "Cloning repository..."
+            Set-Location $installDir
+            git clone --depth 1 https://github.com/Pymmdrza/SpyHunt.git
+        }
+        
+        # Install
         Set-Location "$installDir\SpyHunt"
-        git pull origin main
-    } else {
-        Set-Location $installDir
-        git clone --depth 1 https://github.com/Pymmdrza/SpyHunt.git
+        python -m pip install -e .
+        
+        Write-Success "SpyHunt installed from source"
+    } catch {
+        Write-Error "Failed to install from source: $_"
+        exit 1
     }
-    
-    # Install
-    Set-Location "$installDir\SpyHunt"
-    python -m pip install -e .
-    
-    Write-Success "SpyHunt installed from source"
 }
 
 # Uninstall
 function Uninstall-SpyHunt {
     Write-Info "Uninstalling SpyHunt..."
     
-    python -m pip uninstall spyhunt -y
+    try {
+        python -m pip uninstall spyhunt -y 2>$null
+    } catch {
+        Write-Warning "SpyHunt package not found in pip"
+    }
     
-    $installDir = "$env: USERPROFILE\.spyhunt"
+    $installDir = "$env:USERPROFILE\.spyhunt"
     if (Test-Path $installDir) {
-        Remove-Item -Recurse -Force $installDir
+        try {
+            Remove-Item -Recurse -Force $installDir
+            Write-Success "Removed installation directory"
+        } catch {
+            Write-Warning "Could not remove installation directory: $_"
+        }
     }
     
     Write-Success "SpyHunt uninstalled successfully"
@@ -174,7 +227,7 @@ Options:
 
 Examples:
   irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.ps1 | iex
-  .\install.ps1 -Pip
+  .\install. ps1 -Pip
   .\install.ps1 -Uninstall
 
 "@
@@ -196,7 +249,14 @@ function Main {
     
     # Check Python
     if (-not (Test-Python)) {
-        Install-Python
+        Write-Warning "Python 3.7+ is required but not found"
+        $install = Read-Host "Would you like to install Python now? (Y/N)"
+        if ($install -eq 'Y' -or $install -eq 'y') {
+            Install-Python
+        } else {
+            Write-Error "Installation cancelled.  Please install Python manually and try again."
+            exit 1
+        }
     }
     
     # Install
@@ -206,16 +266,31 @@ function Main {
         Install-SpyHunt
     }
     
-    # Verify
-    Write-Host ""
-    Write-Host "╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "║              Installation Complete!                            ║" -ForegroundColor Green
-    Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "Usage:" -ForegroundColor White
-    Write-Host "  spyhunt --help              Show help message" -ForegroundColor Cyan
-    Write-Host "  spyhunt -u example.com      Scan a target" -ForegroundColor Cyan
-    Write-Host ""
+    # Verify installation
+    try {
+        $verifyOutput = python -m pip show spyhunt 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host ""
+            Write-Host "╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+            Write-Host "║              Installation Complete!                            ║" -ForegroundColor Green
+            Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+            Write-Host ""
+            Write-Host "Usage:" -ForegroundColor White
+            Write-Host "  spyhunt --help              Show help message" -ForegroundColor Cyan
+            Write-Host "  spyhunt -u example.com      Scan a target" -ForegroundColor Cyan
+            Write-Host ""
+        } else {
+            Write-Warning "Installation completed but verification failed"
+        }
+    } catch {
+        Write-Warning "Could not verify installation"
+    }
 }
 
-Main
+# Run main function
+try {
+    Main
+} catch {
+    Write-Error "An unexpected error occurred:  $_"
+    exit 1
+}
