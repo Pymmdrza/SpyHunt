@@ -128,17 +128,23 @@ curl -sSL https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.sh | b
 
 ### Windows (Powershell)
 
-#### Method 1 : Install In Powershell
+#### Method 1
 
 ```
-irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/refs/heads/main/install.ps1 | iex
 ```
 
-#### Method 2 : Install In Powershell
+#### Method 2
 
 ```
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.ps1" -OutFile "install.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Pymmdrza/SpyHunt/refs/heads/main/install.ps1" -OutFile "install.ps1"
 .\install.ps1
+```
+
+#### Method Bypass
+
+```
+Set-ExecutionPolicy Bypass -Scope Process -Force; irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/refs/heads/main/install.ps1 | iex
 ```
 
 Install directly from PyPI using pip:
