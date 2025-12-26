@@ -12,7 +12,7 @@ License: MIT
 Version: 4.0.0
 """
 
-__version__ = "4.0.9"
+__version__ = "4.0.10"
 __author__ = "Pymmdrza"
 __license__ = "MIT"
 __url__ = "https://github.com/Pymmdrza/spyhunt"
