@@ -49,7 +49,7 @@ function Show-Banner {
    _____ _____  __     __ _    _ _    _ _   _ _______ 
   / ____|  __ \ \ \   / /| |  | | |  | | \ | |__   __|
  | (___ | |__) | \ \_/ / | |__| | |  | |  \| |  | |   
-  \___ \|  ___/   \   /  |  __  | |  | | . ` |  | |   
+  \___ \|  ___/   \   /  |  __  | |  | | .  ` |  | |   
   ____) | |        | |   | |  | | |__| | |\  |  | |   
  |_____/|_|        |_|   |_|  |_|\____/|_| \_|  |_|   
                                                        
@@ -67,7 +67,7 @@ function Test-Python {
     try {
         $pythonVersion = python --version 2>&1
         if ($pythonVersion -match "Python 3\. ([7-9]|1[0-9])") {
-            Write-Success "Python found: $pythonVersion"
+            Write-Success "Python found:  $pythonVersion"
             return $true
         }
     } catch {
@@ -94,7 +94,7 @@ function Install-Python {
     # Check for winget
     if (Get-Command winget -ErrorAction SilentlyContinue) {
         try {
-            winget install Python. Python.3.11 --silent --accept-source-agreements --accept-package-agreements
+            winget install Python.Python.3.11 --silent --accept-source-agreements --accept-package-agreements
             Write-Success "Python installed via winget"
         } catch {
             Write-Error "Failed to install Python via winget:  $_"
@@ -107,7 +107,7 @@ function Install-Python {
             choco install python3 -y
             Write-Success "Python installed via chocolatey"
         } catch {
-            Write-Error "Failed to install Python via chocolatey: $_"
+            Write-Error "Failed to install Python via chocolatey:  $_"
             exit 1
         }
     }
@@ -118,7 +118,7 @@ function Install-Python {
     }
     
     # Refresh PATH
-    $env:Path = [System.Environment]:: GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
     
     # Wait for PATH to update
     Start-Sleep -Seconds 2
@@ -161,7 +161,7 @@ function Install-FromSource {
         exit 1
     }
     
-    $installDir = "$env: USERPROFILE\.spyhunt"
+    $installDir = "$env:USERPROFILE\.spyhunt"
     
     try {
         # Create directory
@@ -227,7 +227,7 @@ Options:
 
 Examples:
   irm https://raw.githubusercontent.com/Pymmdrza/SpyHunt/main/install.ps1 | iex
-  .\install. ps1 -Pip
+  .\install.ps1 -Pip
   .\install.ps1 -Uninstall
 
 "@
