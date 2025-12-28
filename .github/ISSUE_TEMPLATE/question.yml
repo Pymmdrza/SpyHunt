@@ -1,0 +1,106 @@
+name: Question / Help Wanted
+description: Ask a question or get help using SpyHunt
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reaching out! We're here to help.
+        
+        Before asking your question, please:
+        - Check the [documentation](https://spyhunt.readthedocs.io)
+        - Search existing [issues](https://github.com/Pymmdrza/SpyHunt/issues) for similar questions
+        - Review the [QUICKSTART guide](https://github.com/Pymmdrza/SpyHunt/blob/main/QUICKSTART.md)
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight Checklist
+      description: Please ensure you've completed all of the following.
+      options:
+        - label: I have read the [documentation](https://spyhunt.readthedocs.io)
+          required: true
+        - label: I have searched existing issues for similar questions
+          required: true
+        - label: I have reviewed the [QUICKSTART guide](https://github.com/Pymmdrza/SpyHunt/blob/main/QUICKSTART.md)
+          required: true
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: Question Type
+      description: What type of question do you have?
+      options:
+        - Installation / Setup
+        - Usage / How-to
+        - Configuration
+        - Best Practices
+        - Integration with other tools
+        - Performance / Optimization
+        - Legal / Authorization
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know? Be as specific as possible.
+      placeholder: I would like to know how to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: |
+        Provide context about what you're trying to accomplish.
+        What have you already tried?
+      placeholder: |
+        I'm trying to...
+        I have already tried...
+
+  - type: input
+    id: version
+    attributes:
+      label: SpyHunt Version (if applicable)
+      description: What version of SpyHunt are you using?
+      placeholder: "e.g., 4.0.10"
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System (if applicable)
+      description: What operating system are you using?
+      options:
+        - Linux
+        - macOS
+        - Windows
+        - Other
+        - Not applicable
+
+  - type: textarea
+    id: attempted
+    attributes:
+      label: What Have You Tried?
+      description: |
+        List any commands, configurations, or solutions you've already attempted.
+      placeholder: |
+        1. I tried...
+        2. I also attempted...
+
+  - type: textarea
+    id: relevant-logs
+    attributes:
+      label: Relevant Logs or Output (if applicable)
+      description: If you have any relevant logs, error messages, or command output, paste them here.
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other information that might help us answer your question
