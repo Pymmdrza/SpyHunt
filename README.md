@@ -2,6 +2,9 @@
 
 ![SpyHunt](https://raw.githubusercontent.com/Pymmdrza/SpyHunt/refs/heads/main/.github/SpyHunt_Main_Banner.png 'SpyHunt')
 
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/pymmdrza/SpyHunt?style=plastic&logo=github)](https://github.com/pymmdrza/spyhunt 'GitHub commit activity') [![GitHub last commit (branch)](https://img.shields.io/github/last-commit/pymmdrza/SpyHunt/main?style=plastic&logo=github)](https://github.com/Pymmdrza/SpyHunt/commit/main 'GitHub last commit') [![Read the Docs](https://img.shields.io/readthedocs/spyhunt?style=plastic&logo=readthedocs)](https://spyhunt.readthedocs.io/ 'Read the Docs') [![GitHub License](https://img.shields.io/github/license/pymmdrza/spyhunt?style=plastic)](https://github.com/Pymmdrza/SpyHunt/blob/main/LICENSE 'License') [![PyPI - Status](https://img.shields.io/pypi/status/spyhunt?style=plastic&logo=pypi&logoColor=white)](https://pypi.org/project/spyhunt/ 'PYPI - SPYHUNT') [![PyPI - Format](https://img.shields.io/pypi/format/spyhunt?style=plastic&logo=pypi&logoColor=white)](https://pypi.org/project/spyhunt/ 'PyPI - Format')
+
+
 **SpyHunt v4.0 (Security Hardened)** - A comprehensive network scanning and vulnerability assessment tool designed for security professionals and penetration testers. This tool performs comprehensive reconnaissance and vulnerability assessment on target networks and web applications, combining multiple scanning techniques with various external tools to provide extensive security intelligence.
 
 ## 🆕 What's New in v4.0
