@@ -1,43 +1,59 @@
-## Description
-<!-- Provide a brief description of the changes in this PR -->
 
-## Type of Change
-<!-- Mark the relevant option with an "x" -->
+## Scanner Functionality
+<!-- If this PR affects scanner modules, complete this section -->
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Code refactoring
-- [ ] Security enhancement
-- [ ] Scanner module update (XXE, SSRF, SSTI, SQLi, etc.)
-- [ ] Integration enhancement (Nuclei, Shodan, etc.)
-- [ ] Other (please describe):
+- [ ] XXE Scanner tested
+- [ ] SSRF Scanner tested
+- [ ] SSTI Scanner tested
+- [ ] SQLi Scanner tested
+- [ ] Nuclei integration tested
+- [ ] Shodan integration tested
+- [ ] Network scanning tested
+- [ ] OSINT features tested
+- [ ] N/A - Does not affect scanner functionality
 
-## Related Issue
-<!-- Link to the issue this PR addresses -->
-Fixes #(issue number)
+## Security Considerations
+<!-- Important for security tools -->
 
-## Changes Made
-<!-- Provide a detailed list of changes -->
+- [ ] No new security vulnerabilities introduced
+- [ ] Code follows secure coding practices
+- [ ] Dependencies are up to date and secure
+- [ ] Sensitive data is properly handled
+- [ ] N/A
 
-- 
-- 
-- 
+## Documentation
+<!-- Check all that apply -->
 
-## Testing
-<!-- Describe the tests you ran to verify your changes -->
+- [ ] README.md updated
+- [ ] Code comments added/updated
+- [ ] Usage examples provided
+- [ ] API documentation updated
+- [ ] Configuration changes documented
+- [ ] No documentation needed
 
-- [ ] Tested locally
-- [ ] Added new test cases
-- [ ] All existing tests pass
-- [ ] Manual testing performed
+## Screenshots/Output
+<!-- If applicable, add screenshots or command output to demonstrate the changes -->
 
-### Test Environment:
-- OS: 
-- Python Version: 
-- Dependencies updated: Yes/No
+## Checklist
+<!-- Ensure all items are completed -->
 
-### Test Results:
-<!-- Provide relevant test output or screenshots -->
+- [ ] My code follows the project's style guidelines
+- [ ] I have performed a self-review of my code
+- [ ] I have commented my code, particularly in hard-to-understand areas
+- [ ] My changes generate no new warnings
+- [ ] I have tested my changes thoroughly
+- [ ] My changes do not break existing functionality
+- [ ] I have updated the documentation accordingly
+- [ ] All dependencies are properly listed in requirements.txt
+
+## Additional Notes
+<!-- Add any additional context, concerns, or notes for reviewers -->
+
+---
+
+**For Reviewers:**
+- [ ] Code quality is acceptable
+- [ ] Tests are adequate
+- [ ] Documentation is clear
+- [ ] Security implications reviewed
+- [ ] Ready to merge
