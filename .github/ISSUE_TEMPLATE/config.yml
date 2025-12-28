@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://spyhunt.readthedocs.io
+    about: Read the comprehensive SpyHunt documentation
+  - name: 🚀 Quick Start Guide
+    url: https://github.com/Pymmdrza/SpyHunt/blob/main/QUICKSTART.md
+    about: Get started quickly with SpyHunt
+  - name: 🔒 Security Vulnerabilities (Private)
+    url: mailto:pymmdrza@gmail.com
+    about: Report critical security vulnerabilities privately via email
+  - name: 💬 Discussions
+    url: https://github.com/Pymmdrza/SpyHunt/discussions
+    about: Ask questions and discuss ideas with the community
