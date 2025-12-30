@@ -100,11 +100,11 @@
 
 8. The script includes a CIDR notation scanner for port scanning across IP ranges.
 
-# INSTALLATION
+## INSTALLATION
 
-## Quick Installation (Recommended)
+### Quick Installation (Recommended)
 
-### Linux / macOS / WSL
+#### Linux / macOS / WSL
 
 #### Install With CURL
 
@@ -198,7 +198,7 @@ sudo python3 install.py
 
 **Note:** The `install.py` script installs external dependencies like nuclei, subfinder, and other tools required for full functionality.
 
-# USAGE 
+## USAGE 
 
 After installing via pip, you can use SpyHunt from anywhere:
 
@@ -467,7 +467,7 @@ SMB Automated Pentest:
                         Domain for credential testing
 ```
 
-# EXAMPLE
+## EXAMPLE
 
 ### Scan for subdomains and save the output to a file.
 ```
